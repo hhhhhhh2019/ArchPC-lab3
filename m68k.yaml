@@ -1,0 +1,26 @@
+name: "assert infix_to_rpn('10 - 2 - 3\n') == ('10 2 - 3 -', '')"
+limit: 2000
+memory_size: 0x1000
+memory_mapped_io:
+  0x80: [49, 48, 32, 45, 32, 50, 32, 45, 32, 51, 10]
+  0x84: []
+reports:
+  - name: "Execution trace"
+    slice: all
+    view: |
+      {pc}: {instruction:next} {pc:label}  {D0:dec} {D1:dec} {D2:dec} {D5:dec} {D6:dec} {D7:dec} {A6:hex} {A7:hex}
+      
+  - name: Check results
+    slice: last
+    filter:
+      - state
+    view: |
+      numio[0x80]: {io:0x80:dec}
+      numio[0x84]: {io:0x84:dec}
+      symio[0x80]: {io:0x80:sym}
+      symio[0x84]: {io:0x84:sym}
+    assert: |
+      numio[0x80]: [] >>> []
+      numio[0x84]: [] >>> [49,48,32,50,32,45,32,51,32,45]
+      symio[0x80]: "" >>> ""
+      symio[0x84]: "" >>> "10 2 - 3 -"
