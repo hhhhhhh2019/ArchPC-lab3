@@ -13,11 +13,24 @@
 \\    """
 \\    if exp < 0:
 \\        return [-1]
-\\    result = 1
-\\    for _ in range(exp):
+\\    if exp == 0:
+\\        return 1
+\\    result = base
+\\    exp -= 1
+\\
+\\    current_exp = 1
+\\
+\\    while current_exp << 1 <= exp:
+\\        result *= result
+\\        if result > max_int32 or result < min_int32:
+\\            return [overflow_error_value]
+\\        current_exp <<= 1
+\\
+\\    for _ in range(exp - current_exp):
 \\        result *= base
 \\        if result > max_int32 or result < min_int32:
 \\            return [overflow_error_value]
+\\    
 \\    return [result]
 \\
 \\
@@ -26,87 +39,30 @@
 \\assert power(5, 0) == [1]
 \\assert power(0, 5) == [0]
 
-.text
-
 step:
-  \\ [sp] = result, [sp+1] = base
-  a! \\ A = result
-  0
+    ;
 
-  \\ A = result, [sp] = 0, [sp+1] = base
-
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  +*
-  \\ A,T = A * S + T (A,T = result * base + 0)
-
-  dup
-  if step_good \\ check, if result is not exceed i32 range
-  dup \\ if base negative, T maybe = -1
-  inv
-  if step_good
-
-  0xcccccccc
-  !p 0x84
-  halt
-
-step_good:
-  \\ A = result, T = 0, S = base
-  drop
-  a
-  ;
-
+big_step:
+    ;
+    
+.text
 _start:
-  @p 0x80
-  @p 0x80
+    @p 0x80 \\ base
+    @p 0x80 \\ exp
 
-  dup
-  -if exp_non_neg
+    
+        
+    dup
+    if exp_zero \\ if exp == 0
 
-  \\ if exp < 0
-  -1
-  !p 0x84
-halt
+    -1
+    + \\ exp -= 1
 
-exp_non_neg:
-  >r \\ move exp to return stack
-  1 \\ sp: result, sp+1: base
-loop:
-  next continue \\ loop while exp-- != 0
-  exit ;
-continue:
-  step
-  loop ;
+    
 
-exit:
-  !p 0x84
-  halt
+    halt
+
+exp_zero:
+    1
+    !p 0x84
+    halt
