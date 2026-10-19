@@ -1,0 +1,50 @@
+T       001
+S       010
+R       011
+A       100
+B       101
+buffer  110
+pc      111
+         
+T       000
+S       001
+R       010
+mem_in  011
+buffer  100
+ALU
+         
+pc      001
+buffer  010
+A       011
+B       100
+         
+T        01
+buffer   10
+mem_in   11
+         
+cmd     000
+mem_out 001
+T       010
+S       011
+R       100
+A       101
+B       110
+buffer  111
+         
+pc      000
+dsp     001
+rsp     010
+A       011
+B       100
+buffer  101
+
+
+result:
+  000: cmd rsp
+  001: mem_in A
+  010: buffer
+  011: T dsp
+  100: B ALU
+  101: mem_out pc
+  110: R
+  111: S
