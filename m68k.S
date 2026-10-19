@@ -96,10 +96,22 @@
 ;;assert infix_to_rpn('(1 + 2) * 3\n') == ('1 2 + 3 *', '')
 ;;assert infix_to_rpn('10 - 2 - 3\n') == ('10 2 - 3 -', '')
 
-
-  
 .data
-input: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.org 0
+input_buf:  .byte 0
+
+.data
+.org 0x40
+result_buf: .byte 0
+        
+.data
+.org 0x80
+input:  .word 0
+output: .word 0
+max_len:    .word 0x40
+result_len: .word 0
+ops_len:    .word 0
+ops_buf:    .byte 0
 
     ;; A7 - sp
     ;; A6 - fp
@@ -107,27 +119,10 @@ input: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
     ;; т.к. в A* можно только писать, их сохранить нельзя
     ;; аргументы для функций передаются через стек в обратном порядке(на верху стека - первый арумент)
     ;; результат также кладеться в стек после аргументов
-  
+
 .text
-_start:
-    move.l 0x1000, D0
-    movea.l D0, A7
-
-    ;; read_line(input, 0x40)
-    link A6, -8  
-    move.l 0x40, 4(A7)
-    move.l input, 0(A7)
-    jsr read_line
-    unlk A6
-
-    link A6, -4
-    move.l input, 0(A7)
-    jsr infix_to_rpn
-    unlk A6
-    
-    halt
-
-raise_overflow:
+.org 0xb0
+raise_overflow: 
     move.l 0x84, D0
     movea.l D0, A0
     move.l 0xcccccccc, (A0)
@@ -139,268 +134,35 @@ raise_error:
     move.l -1, (A0)
     halt 
     
-;; void read_line(char* input, int size)
-read_line:
-    link A6, -8
-
+; void read_input(int size)
+read_input:
+    link A6, -4
     move.l D0, -4(A6)
-    move.l D1, -8(A6)
 
-    move.l 0x80, D0
-    movea.l D0, A0              ; A0 = 0x80
-    
-    move.l 8(A6), D0
-    movea.l D0, A1              ; A1 = input
-
-    move.l 12(A6), D0           ; D0 = size
-
-read_line_loop:
-    cmp.l 0, D0
-    beq raise_overflow
-    
-    move.b (A0), D1
-    move.b D1, (A1)+
-
-    cmp.b 10, D1
-    beq read_line_break
-
-    sub.l 1, D0
-    jmp read_line_loop
-
-read_line_break:
-    
-    move.l -8(A6), D1
-    move.l -4(A6), D0
-    
-    unlk A6
-    rts
-
-;; void infix_to_rpn(char* input)
-infix_to_rpn:
-    ;; D7 - result_size
-    ;; D6 - ops_size
-    ;; D5 - temp
-    ;; | result | ops | regs | a6’
-    ;;  ^                     ^
-    ;; a7                     a6
-    link A6, -120                ; 64(result) + 24(ops) + 8*4(D*)
-
-    move.l D0, -4(A6)
-    move.l D1, -8(A6)
-    move.l D2, -12(A6)
-    move.l D3, -16(A6)
-    move.l D4, -20(A6)
-    move.l D5, -24(A6)
-    move.l D6, -28(A6)
-    move.l D7, -32(A6)
-
-    clr.l D7
-    clr.l D6
-
-    ;; for (int i = 0; i < 0x40;)
-    move.l 0, D5                ; i
-    move.l 8(A6), D0
-    movea.l D0, A0              ; A0 = input
-infix_to_rpn_step_loop:
-    cmp.l 0x40, D5
-    bge infix_to_rpn_step_loop_break
-    
-    move.b (A0, D5), D0         ; D0 = input[i]
-    
-    ;; if (input[i] == ’\n’) break;
-    cmp.b 10, D0
-    beq infix_to_rpn_step_loop_break
-
-    ;; if (input[i] == ’ ’) { i++; continue; }
-    cmp.b 32, D0
-    bne infix_to_rpn_step_loop_0_9
-    add.l 1, D5
-    jmp infix_to_rpn_step_loop
-
-infix_to_rpn_step_loop_0_9:
-    ;; if ('0' <= input[i] && input[i] <= '9')
-    cmp.b 48, D0
-    blt infix_to_rpn_step_loop_op
-    cmp.b 57, D0
-    bgt infix_to_rpn_step_loop_op
-
-infix_to_rpn_step_loop_0_9_loop:
-    ;; while ('0' <= input[i] && input[i] <= '9' && i < 0x40 && input[i] != '\n')
-    cmp.b 48, D0
-    blt infix_to_rpn_step_loop_0_9_loop_break
-    cmp.b 57, D0
-    bgt infix_to_rpn_step_loop_0_9_loop_break
-    cmp.l 0x40, D5
-    bge infix_to_rpn_step_loop_0_9_loop_break
-    cmp.b 10, D0
-    beq infix_to_rpn_step_loop_0_9_loop_break
-
-    move.b D0, 0(A7, D7)        ; sp + result_size
-    add.l 1, D7
-    add.l 1, D5
-
-    cmp.l 0x40, D7
-    beq raise_overflow
-
-    move.b (A0, D5), D0         ; D0 = input[i]
-
-    jmp infix_to_rpn_step_loop_0_9_loop
-
-infix_to_rpn_step_loop_0_9_loop_break:
-    move.b 32, 0(A7, D7)        ; sp + result_size
-    add.l 1, D7
-    jmp infix_to_rpn_step_loop
-    
-infix_to_rpn_step_loop_op:
-    ;; if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/')
-    cmp.b 43, D0
-    beq infix_to_rpn_step_loop_op_loop_prepare
-    cmp.b 45, D0
-    beq infix_to_rpn_step_loop_op_loop_prepare
-    cmp.b 42, D0
-    beq infix_to_rpn_step_loop_op_loop_prepare
-    cmp.b 47, D0
-    bne infix_to_rpn_step_loop_lpar
-
-infix_to_rpn_step_loop_op_loop_prepare:
-    link A6, -5
-    move.b D0, 0(A7)
-    jsr get_priority
-    move.l 1(A7), D1            ; D1 = get_priority(input[i])
-    unlk A6
-    
-infix_to_rpn_step_loop_op_loop:
-    ;; while (ops_len != 0 && top(ops) != '(' && get_priority(top(ops)) >= get_priority(input[i]))
-    cmp.l 0, D6
-    beq infix_to_rpn_step_loop_op_loop_break
-    cmp.b 40, 63(A7, D6)        ; sp + 64(result) + ops_size - 1
-    beq infix_to_rpn_step_loop_op_loop_break
-
-    move.b 63(A7, D6), D2
-    link A6, -5
-    move.b D2, 0(A7)
-    jsr get_priority
-    move.l 1(A7), D2            ; D2 = get_priority(ops[ops_size-1])
-    unlk A6
-
-    cmp.l D1, D2
-    blt infix_to_rpn_step_loop_op_loop_break
-
-    move.b 63(A7, D6), 0(A7, D7)
-    sub.l 1, D6
-    add.l 1, D7
-
-    cmp.l 0x40, D7
-    beq raise_overflow
-    
-    move.b 32, -120(A6, D7) 
-    add.l 1, D7
-
-    cmp.l 0x40, D7
-    beq raise_overflow
-
-    jmp infix_to_rpn_step_loop_op_loop
-    
-infix_to_rpn_step_loop_op_loop_break:
-    move.b D0, 64(A7, D6)       ; sp + 64(result) + ops_size
-    add.l 1, D6
-    add.l 1, D5
-    jmp infix_to_rpn_step_loop
-    
-infix_to_rpn_step_loop_lpar:
-    cmp.b 40, D0
-    bne infix_to_rpn_step_loop_rpar
-    
-    move.b D0, 64(A7, D6)       ; sp + 64(result) + ops_size
-    add.l 1, D6
-    add.l 1, D5
-    jmp infix_to_rpn_step_loop
-    
-infix_to_rpn_step_loop_rpar:
-    cmp.b 41, D0
-    bne raise_error
-
-infix_to_rpn_step_loop_rpar_loop:
-    cmp.l 0, D6
-    beq infix_to_rpn_step_loop_rpar_loop_break
-    cmp.b 40, 63(A7, D6)
-    beq infix_to_rpn_step_loop_rpar_loop_break
-
-    move.b 63(A7, D6), 0(A7, D7)
-    add.l 1, D7
-    sub.l 1, D6
-    
-    move.b 32, 0(A7, D7)
-    add.l 1, D7
-
-    jmp infix_to_rpn_step_loop_rpar_loop
-
-infix_to_rpn_step_loop_rpar_loop_break:
-    cmp.l 0, D6
-    beq raise_error
-
-    sub.l 1, D6
-    add.l 1, D5
-
-    jmp infix_to_rpn_step_loop
-
-infix_to_rpn_step_loop_break:
-
-infix_to_rpn_ops_loop:
-    cmp.l 0, D6
-    beq infix_to_rpn_ops_loop_break
-
-    move.b 63(A7, D6), D1       ; sp + 64(result) + ops_size - 1
-
-    cmp.b 40, D1                ; ’(’
-    beq raise_error
-    
-    move.b D1, 0(A7, D7)        ; sp + result_size
-    sub.l 1, D6
-    add.l 1, D7
-    
-    move.b 32, 0(A7, D7)        ; sp + result_size
-    add.l 1, D7
-
-    jmp infix_to_rpn_ops_loop
-    
-infix_to_rpn_ops_loop_break:
-
-    clr.l D0
+    move.l input, D0
     movea.l D0, A0
 
-    sub.l 1, D7
-    
-infix_to_rpn_send_loop:
-    cmp.l D7, D0
-    bge infix_to_rpn_send_loop_break
+    move.l input_buf, D0
+    movea.l D0, A1
 
-    move.b 0(A7, D0), 0x84(A0)
-    add.l 1, D0
+    move.l 8(A6), D0
 
-    jmp infix_to_rpn_send_loop
+read_input_loop:
+    cmp.l 0, D0
+    beq raise_overflow
 
-infix_to_rpn_send_loop_break:
+    move.b (A0), (A1)+
+    sub.l 1, D0
 
-    move.l  -4(A6), D0
-    move.l  -8(A6), D1
-    move.l -12(A6), D2
-    move.l -16(A6), D3
-    move.l -20(A6), D4
-    move.l -24(A6), D5
-    move.l -28(A6), D6
-    move.l -32(A6), D7
+    cmp.b 10, -1(A1)
+    bne read_input_loop
 
+read_input_loop_break:   
+    move.l -4(A6), D0
     unlk A6
     rts
 
-    ;; int get_priority(char ch) {
-    ;; 	if (ch == '+' || ch == '-')
-    ;; 		return 1;
-    ;; 	if (ch == '*' || ch == '/')
-    ;; 		return 2;
-    ;; 	return 0;
-    ;; }
+; intxo get_priority(char)
 get_priority:   
     link A6, -4
 
@@ -408,13 +170,13 @@ get_priority:
 
     move.b 8(A6), D0
 
-    cmp.b 43, D0
+    cmp.b '+', D0
     beq get_priority_1
-    cmp.b 45, D0
+    cmp.b '-', D0
     beq get_priority_1
-    cmp.b 42, D0
+    cmp.b '*', D0
     beq get_priority_2
-    cmp.b 47, D0
+    cmp.b '/', D0
     beq get_priority_2
 
     clr.l D0
@@ -433,3 +195,283 @@ get_priority_exit:
     move.l -4(A6), D0
     unlk A6
     rts
+    
+; void consume_input()
+consume_input:
+    link A6, -24
+
+    move.l D0, -4(A6)
+    move.l D1, -8(A6)
+    move.l D2, -12(A6)
+    move.l D3, -16(A6)
+    move.l D4, -20(A6)
+    move.l D5, -24(A6)
+
+    move.l max_len, D0
+    movea.l D0, A0
+    move.l (A0), D5
+
+    move.l result_len, D0
+    movea.l D0, A0
+    move.l (A0), D1
+
+    move.l ops_len, D0
+    movea.l D0, A0
+    move.l (A0), D2
+
+    move.l input_buf, D0
+    movea.l D0, A0
+
+    move.l result_buf, D0
+    movea.l D0, A1
+
+    move.l ops_buf, D0
+    movea.l D0, A2
+    
+    move.b (A0)+, D0
+
+consume_input_loop:
+consume_input_loop_newline:
+    cmp.b 10, D0
+    beq consume_input_loop_break
+    
+consume_input_loop_space:
+    cmp.b ' ', D0
+    bne consume_input_loop_0_9
+
+    move.b (A0)+, D0
+    jmp consume_input_loop
+    
+consume_input_loop_0_9:
+    cmp.b '0', D0
+    blt consume_input_loop_ops
+    cmp.b '9', D0
+    bgt consume_input_loop_ops
+    
+consume_input_loop_0_9_loop:
+    cmp.b '0', D0
+    blt consume_input_loop_0_9_break
+    cmp.b '9', D0
+    bgt consume_input_loop_0_9_break
+    cmp.b 10, D0
+    beq consume_input_loop_0_9_break
+
+    move.b D0, (A1, D1)
+    add.l 1, D1
+
+    cmp.l D5, D1
+    beq raise_overflow
+    
+    move.b (A0)+, D0
+
+    jmp consume_input_loop_0_9_loop
+    
+consume_input_loop_0_9_break:
+    move.b ' ', (A1, D1)
+    add.l 1, D1
+    jmp consume_input_loop
+    
+consume_input_loop_ops:
+    cmp.b '+', D0
+    beq consume_input_loop_ops_prepare
+    cmp.b '-', D0
+    beq consume_input_loop_ops_prepare
+    cmp.b '*', D0
+    beq consume_input_loop_ops_prepare
+    cmp.b '/', D0
+    beq consume_input_loop_ops_prepare
+    jmp consume_input_loop_lpar
+
+consume_input_loop_ops_prepare:
+    link A6, -5
+    move.b D0, 0(A7)
+    jsr get_priority
+    move.l 1(A7), D4
+    unlk A6
+
+consume_input_loop_ops_loop:        
+    cmp.b 0, D2
+    beq consume_input_loop_ops_loop_break
+    cmp.b '(', -1(A2, D2)
+    beq consume_input_loop_ops_loop_break
+    link A6, -5
+    move.b -1(A2, D2), 0(A7)
+    jsr get_priority
+    move.l 1(A7), D3
+    unlk A6
+    cmp.l D4, D3
+    blt consume_input_loop_ops_loop_break
+
+    sub.l 1, D2
+    move.b (A2, D2), (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    bge raise_overflow
+    move.b ' ', (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    bge raise_overflow
+    
+    jmp consume_input_loop_ops_loop
+    
+consume_input_loop_ops_loop_break:
+    move.b D0, (A2, D2)
+    add.l 1, D2
+
+    move.b (A0)+, D0
+    jmp consume_input_loop
+    
+consume_input_loop_lpar:
+    cmp.b '(', D0
+    bne consume_input_loop_rpar
+    
+    move.b D0, (A2, D2)
+    add.l 1, D2
+    move.b (A0)+, D0
+    jmp consume_input_loop
+    
+consume_input_loop_rpar:
+    cmp.b ')', D0
+    bne raise_error
+
+consume_input_loop_rpar_loop:
+    cmp.l 0, D2
+    beq consume_input_loop_rpar_loop_break
+    cmp.b '(', -1(A2, D2)
+    beq consume_input_loop_rpar_loop_break
+
+    sub.l 1, D2
+    move.b (A2, D2), (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    bge raise_overflow
+    move.b ' ', (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    bge raise_overflow
+    
+    jmp consume_input_loop_rpar_loop
+
+consume_input_loop_rpar_loop_break:
+    cmp.l 0, D2
+    beq raise_error
+    move.b (A0)+, D0
+    sub.l 1, D2
+    jmp consume_input_loop
+    
+consume_input_loop_break:
+    move.l result_len, D0
+    movea.l D0, A0
+    move.l D1, (A0)
+
+    move.l ops_len, D0
+    movea.l D0, A0
+    move.l D2, (A0)
+
+    move.l -4(A6), D0
+    move.l -8(A6), D1
+    move.l -12(A6), D2
+    move.l -16(A6), D3
+    move.l -20(A6), D4
+
+    unlk A6
+    rts
+
+; void append_ops()
+append_ops:
+    link A6, -12
+    move.l D0, -4(A6)
+    move.l D1, -8(A6)
+    move.l D2, -12(A6)
+    move.l D3, -16(A6)
+    move.l D4, -20(A6)
+
+    move.l result_len, D0
+    movea.l D0, A0
+    move.l (A0), D1
+
+    move.l ops_len, D0
+    movea.l D0, A0
+    move.l (A0), D2
+
+    move.l result_buf, D0
+    movea.l D0, A1
+
+    move.l ops_buf, D0
+    movea.l D0, A2
+
+append_ops_loop:
+    cmp.l 0, D2
+    beq append_ops_loop_break
+
+    move.b -1(A2, D2), D0
+    sub.l 1, D2
+
+    cmp.b '(', D0
+    beq raise_error
+
+    move.b D0, (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    beq raise_overflow
+    
+    move.b ' ', (A1, D1)
+    add.l 1, D1
+    cmp.l D5, D1
+    beq raise_overflow
+
+    jmp append_ops_loop
+
+append_ops_loop_break:
+    move.b 0, -1(A1, D1)
+    
+    move.l -12(A6), D2
+    move.l -8(A6), D1
+    move.l -4(A6), D0
+    unlk A6
+    rts
+    
+; void infix_to_rpn()
+infix_to_rpn:
+    jsr consume_input
+    jsr append_ops
+    rts
+
+; void print_result()
+print_result:
+    link A6, -4
+
+    move.l result_buf, D0
+    movea.l D0, A0
+
+    move.l output, D0
+    movea.l D0, A1
+
+print_result_loop:
+    cmp.b 0, (A0)
+    beq print_result_loop_break
+    move.b (A0)+, (A1)
+
+    jmp print_result_loop
+
+print_result_loop_break:    
+    unlk A6
+    rts
+    
+_start:
+    move.l 0x1000, D0
+    movea.l D0, A7
+
+    move.l max_len, D0
+    movea.l D0, A0
+
+    link A6, -4
+    move.l (A0), 0(A7)
+    jsr read_input
+    unlk A6
+
+    jsr infix_to_rpn
+    jsr print_result
+    
+    halt
+    

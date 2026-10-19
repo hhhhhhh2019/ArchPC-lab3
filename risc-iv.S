@@ -26,6 +26,8 @@
 .data
 .org 0
 result: .byte 0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0
+input_addr: .word 0x80
+output_addr:  .word 0x84
 
 ;; глобальные регистры:
 ;; s1 - содржит 10(\n в ascii)
@@ -34,19 +36,22 @@ result: .byte 0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0x5f,0
 ;; s4 - 32 ('a'-'A')
 ;; gp - указатель на последний символ в результирующей строке
 
-
 .text
-.org 0x100
+.org 0x88
 recursion:
   sw fp, -4(sp)
   sw ra, -8(sp)
   mv fp, sp
-  addi sp, sp, -8
+  addi sp, sp, -12
 
   lb t0, 0(gp)
   beqz t0, fail
 
-  lb t0, 0x80(zero)
+  lui t1, %hi(input_addr)
+  addi t1, t1, %lo(input_addr)
+  lw t1, 0(t1)
+
+  lb t0, 0(t1)
   beq t0, s1, rec_exit
 
   bgt t0, s3, save_char ;; char > 'z'
@@ -55,7 +60,6 @@ recursion:
   sub t0, t0, s4
 save_char:
   sb t0, 0(gp)
-  ;sb t0, 0x84(zero)
   addi gp, gp, 1
 
   jal ra, recursion
@@ -67,24 +71,30 @@ rec_exit:
 jr ra
 
 _start:
-  addi sp, zero, 8188
+  addi sp, zero, 0xffc
 
   addi s1, zero, 10  ;; '\n'
-  addi s2, zero, 96  ;; 'a' - 1
-  addi s3, zero, 122 ;; 'z'
+  addi s2, zero, '`' ;; 'a' - 1
+  addi s3, zero, 'z' ;; 'z'
   addi s4, zero, 32  ;; 'A'-'a'
-  mv gp, zero
+
+  lui gp, %hi(result)
+  addi gp, gp, %lo(result)
 
   jal ra, recursion
-
   sb zero, 0(gp)
+  
+  lui gp, %hi(result)
+  addi gp, gp, %lo(result)
 
-  mv gp, zero
+  lui t1, %hi(output_addr)
+  addi t1, t1, %lo(output_addr)
+  lw t1, 0(t1)
 print_loop:
   lb t0, 0(gp)
   beqz t0, exit
 
-  sb t0, 0x84(zero)
+  sb t0, 0(t1)
   addi gp, gp, 1
   j print_loop
 
@@ -95,5 +105,9 @@ fail:
   lui t0, %hi(0xcccccccc)
   addi t0, t0, %lo(0xcccccccc)
 
-  sw t0, 0x84(zero)
+  lui t1, %hi(output_addr)
+  addi t1, t1, %lo(output_addr)
+  lw t1, 0(t1)
+
+  sw t0, 0(t1)
 halt

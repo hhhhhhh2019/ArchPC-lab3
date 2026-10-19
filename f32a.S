@@ -13,24 +13,11 @@
 \\    """
 \\    if exp < 0:
 \\        return [-1]
-\\    if exp == 0:
-\\        return 1
-\\    result = base
-\\    exp -= 1
-\\
-\\    current_exp = 1
-\\
-\\    while current_exp << 1 <= exp:
-\\        result *= result
-\\        if result > max_int32 or result < min_int32:
-\\            return [overflow_error_value]
-\\        current_exp <<= 1
-\\
-\\    for _ in range(exp - current_exp):
+\\    result = 1
+\\    for _ in range(exp):
 \\        result *= base
 \\        if result > max_int32 or result < min_int32:
 \\            return [overflow_error_value]
-\\    
 \\    return [result]
 \\
 \\
@@ -39,30 +26,140 @@
 \\assert power(5, 0) == [1]
 \\assert power(0, 5) == [0]
 
-step:
-    ;
+  .data
+input_addr: .word  0x80
+output_addr:  .word  0x84
+overflow_value: .word 0xcccccccc
+int_max_plus_1: .word  0x80000000
+mul_steps_count_minus_1:  .word 31
 
-big_step:
-    ;
-    
-.text
+  .text
+exit:
+  @p output_addr
+  a!
+  !
+  halt
+
+overflow:
+  @p overflow_value
+  exit ;
+
+  \\ a b -> a*b
+multiply:
+  a!
+  0
+  
+  @p mul_steps_count_minus_1
+  >r
+multiply_loop:
+  +*
+  next multiply_loop
+  
+  if multiply_exit
+  overflow ;
+multiply_exit:
+  drop
+  a
+  
+  ;
+
+power:
+  1
+  \\ stack: base, exp, resul
+
+  over
+  if power_exit
+  
+power_loop:
+  over \\ base, exp, result, exp
+  1
+  and
+  if mul_base
+
+mul_result: \\ result *= base
+  >r \\ base, exp | result
+  over \\ base, exp, base | result
+  r> \\ base, exp, base, result
+  multiply \\ base, exp, base*result
+
+mul_base: \\ base *= base
+  >r
+  2/
+  r>
+  over
+  if power_exit
+  
+  >r >r \\ base | exp, result
+  dup \\ base base | exp, result
+  multiply \\ base*base | exp, result
+  r> r>
+
+  power_loop ;
+  
+power_exit:
+  a!
+  ;
+  
+  
+  .text
+  .org 0x88
+  
 _start:
-    @p 0x80 \\ base
-    @p 0x80 \\ exp
+  @p input_addr
+  a!
 
-    
-        
-    dup
-    if exp_zero \\ if exp == 0
+  @ \\ base
+  @ \\ exp
 
-    -1
-    + \\ exp -= 1
-
-    
-
-    halt
+  dup
+  if exp_zero
+  dup
+  -if exp_positive
+  
+exp_negative: 
+  -1
+  exit ;
 
 exp_zero:
-    1
-    !p 0x84
-    halt
+  1
+  exit ;
+
+exp_positive:
+  over
+  -if base_positive
+
+base_negative:
+  >r
+  inv
+  1 +
+  r>
+
+  dup
+  1 and
+
+  if base_negative_exp_even
+  
+base_negative_exp_odd:  
+  power
+  a
+
+  inv
+  1 +
+  
+  exit ;
+  
+base_negative_exp_even: 
+  power
+  a
+  exit ;
+
+base_positive:
+  power
+  a
+
+  dup
+  @p int_max_plus_1
+  +
+  -if overflow
+  
+  exit ;

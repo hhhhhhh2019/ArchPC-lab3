@@ -1,6 +1,7 @@
 acc2                f32a  m68k         risc-iv
 count_leading_zeros power infix_to_rpn upper_case_cstr
 
-risc https://wrench.edu.swampbuds.me/report/89c7ec45-4827-4821-a20f-7cbde5438c51
-acc https://wrench.edu.swampbuds.me/report/7a5c381f-5a6c-4dc5-bb0a-5bd54b9acc1d
-m68k https://wrench.edu.swampbuds.me/report/c31f5492-9636-4103-a358-f17f9e7dfa3e
+risc https://wrench.edu.swampbuds.me/report/e9c27da8-bfe7-4133-b216-4918e06d0cc8
+acc https://wrench.edu.swampbuds.me/report/ab6a7718-e682-4dfa-aa1c-aa8c6c2fbe6f
+m68k https://wrench.edu.swampbuds.me/report/609bf723-ad5d-4267-a180-60bd99d7dbd0
+f32a https://wrench.edu.swampbuds.me/report/87db331b-7536-48f1-b07a-bc7ff9e36990

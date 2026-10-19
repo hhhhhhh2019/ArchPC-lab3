@@ -1,15 +1,15 @@
-limit: 100000
-memory_size: 8192
+limit: 3000
+memory_size: 0x1000
 
 memory_mapped_io:
-  0x80: [1, 100]
+  0x80: [-1, 3]
   0x84: []
 
 reports:
   - name: "Execution trace"
     slice: all
     view: |
-      {pc}: {instruction:next} {pc:label} {stack:dec}
+      {pc}: {instruction:next} {pc:label}  A: {A:dec}  stack: [ {stack:dec} ]  rstack: [ {rstack:dec} ]
 
   - name: "Result verification"
     slice: last
@@ -18,4 +18,4 @@ reports:
       numio[0x84]: {io:0x84:dec}
     assert: |
       numio[0x80]: [] >>> []
-      numio[0x84]: [] >>> [1]
+      numio[0x84]: [] >>> [-1]

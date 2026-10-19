@@ -23,7 +23,7 @@ void infix_to_rpn(char* input) {
 		}
 
 		if ('0' <= input[i] && input[i] <= '9') {
-			while ('0' <= input[i] && input[i] <= '9' && i < 0x40 && input[i] != '\n') {
+			while ('0' <= input[i] && input[i] <= '9' && input[i] != '\n') {
 				result[result_size++] = input[i++];
 
 				if (result_size == 0x40) overflow();
@@ -36,7 +36,7 @@ void infix_to_rpn(char* input) {
 
 		if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') {
 			while (ops_len != 0 && top(ops) != '(' && get_priority(top(ops)) >= get_priority(input[i])) {
-				result[result_size++] = pop(ops);
+				result[result_size++] = ops[--ops_len];
 				if (result_size == 0x40) overflow();
 				result[result_size++] = ' ';
 				if (result_size == 0x40) overflow();
@@ -53,7 +53,7 @@ void infix_to_rpn(char* input) {
 			continue;
 		}
 
-		if (inputs[i] == ')') {
+		if (input[i] == ')') {
 			while (ops_len != 0 && top(ops) != '(') {
 				result[result_size++] = pop(ops);
 				if (result_size == 0x40) overflow();
@@ -79,7 +79,7 @@ void infix_to_rpn(char* input) {
     if (op == '(')
       overflow();
 
-    result[result_size++] = op;
+		result[result_size++] = op;
     if (result_size == 0x40) overflow();
     result[result_size++] = ' ';
     if (result_size == 0x40) overflow();

@@ -23,16 +23,19 @@ n: .word 0
 i: .word 31
 one: .word 1
 
+input: .word 0x80
+output: .word 0x84
+
 .text
-.org 0x100
 _start:
-  load_addr 0x80
+  load input
+  load_acc
   store n
 
   bnez non_zero
   load_imm 32
-  store_addr 0x84
-  halt
+
+  jmp exit
 
 non_zero:
   load n
@@ -51,5 +54,7 @@ non_zero:
   bgez non_zero
 break:
   load result
-  store_addr 0x84
-halt
+
+exit:
+  store_ind output
+  halt
