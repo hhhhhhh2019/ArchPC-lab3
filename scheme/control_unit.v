@@ -15,6 +15,7 @@ module control_unit(input wire         clk,
    reg [31:0]  T, S, R, A, B, buffer;
    reg [31:0]  pc, dsp, rsp;
    reg [7:0]   cmd;
+   reg         carry, eam;
 
    reg [31:0]  bus_input;
    reg [31:0]  bus_output;
@@ -59,7 +60,11 @@ module control_unit(input wire         clk,
    wire [2:0] m_bus_mux_mask;
    wire [2:0] m_bus_mux_output;
 
-   assign {m_alu_mux_input1, m_alu_mux_input2, m_alu_mux_operation, m_bus_mux_input, m_bus_mux_shift, m_bus_shift_right, m_bus_mux_or, m_bus_mux_mask, m_bus_mux_output} = rom[mc][23:2];
+   wire       m_a31_t0;
+   wire       m_set_eam;
+   wire       m_reset_carry;
+
+   assign {m_a31_t0, m_set_eam, m_reset_carry, m_alu_mux_input1, m_alu_mux_input2, m_alu_mux_operation, m_bus_mux_input, m_bus_mux_shift, m_bus_shift_right, m_bus_mux_or, m_bus_mux_mask, m_bus_mux_output} = rom[mc][26:2];
 
    reg [1:0]  bus_shift;
    reg [31:0] bus_mask;
@@ -83,10 +88,10 @@ module control_unit(input wire         clk,
       endcase
 
       case (m_alu_mux_operation)
-        3'b000: ALU = ALU_input1 + ALU_input2;
+        3'b000: {carry, ALU} = ALU_input1 + ALU_input2 + (carry & eam);
         3'b001: ALU = ALU_input1 & ALU_input2;
         3'b010: ALU = ALU_input1 ^ ALU_input2;
-        3'b011: ALU =~ALU_input1;
+        3'b011: ALU = ~ALU_input1;
         3'b100: ALU = ALU_input1 << 1;
         3'b101: ALU = ALU_input1 >> 1;
       endcase
@@ -168,6 +173,8 @@ module control_unit(input wire         clk,
 		 pc  <= 32'h0000;
 		 dsp <= 32'h1000;
 		 rsp <= 32'h2000;
+         carry <= 1'b0;
+         eam <= 1'b0;
 	  end else begin
 		 mc <= mc + 1;
 
@@ -180,7 +187,13 @@ module control_unit(input wire         clk,
 			  rsp <= rsp + (m_offset_rsp == 2'b01 ? 32'd4 : (m_offset_rsp == 2'b10 ? -32'd4 : 32'd0));
 		   end
 		   2'b10: begin // move registers + ALU
-			  case (m_bus_mux_output)
+			  if (m_a31_t0)
+                A[31] <= T[0];
+              else if (m_set_eam)
+                eam <= T[0];
+              else if (m_reset_carry)
+                carry <= 1'b0;
+              else case (m_bus_mux_output)
 				3'b000: cmd <= bus_output[31:24];
 				3'b001: A <= bus_output | (bus_or & bus_mask);
 				3'b010: buffer <= bus_output | (bus_or & bus_mask);

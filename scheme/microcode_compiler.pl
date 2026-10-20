@@ -144,12 +144,15 @@ sub parse_move_and_alu {
 	my $m_alu_mux_input2 = 0;
 	my $m_alu_mux_operation = 0;
 
-	my $m_bus_mux_input;
+	my $m_bus_mux_input = 0;
 	my $m_bus_mux_shift = 0;
 	my $m_bus_shift_right = 0;
 	my $m_bus_mux_or = 0;
 	my $m_bus_mux_mask = 0;
-	my $m_bus_mux_output;
+	my $m_bus_mux_output = 0;
+    my $m_a31_t0 = 0;
+    my $m_set_eam = 0;
+    my $m_reset_carry = 0;
 
 	if ($line =~ /ALU\s+\<\-\s+T/)   { $m_alu_mux_input1 = 0; }
 	if ($line =~ /ALU\s+\<\-\s+A/)   { $m_alu_mux_input1 = 1; }
@@ -172,8 +175,14 @@ sub parse_move_and_alu {
     # out <- inp >> (4-offset[1:0])*8 | or
     # out <- inp << (4-offset[1:0])*8 | or & 0xffffffff >>    mask_offset[1:0] *8
     # out <- inp >>    offset[1:0] *8 | or & 0xffffffff << (4-mask_offset[1:0])*8
-    
-    if ($line =~ s/^(?<result>\w+)\s+\<\-\s+(?<input>\w+)\s*//) {
+
+    if ($line =~ /^A\[31\]\s+\<\-\s+T\[0\]/) {
+        $m_a31_t0 = 1;
+    } elsif ($line =~ /^eam\s+\<\-\s+T\[0\]/) {
+        $m_set_eam = 1;
+    } elsif ($line =~ /^carry\s+\<\-\s+0/) {
+        $m_reset_carry = 1;
+    } elsif ($line =~ s/^(?<result>\w+)\s+\<\-\s+(?<input>\w+)\s*//) {
         $m_bus_mux_output = $registers_index{$+{result}};
         $m_bus_mux_input = $registers_index{$+{input}};
 
@@ -193,7 +202,7 @@ sub parse_move_and_alu {
         }
     }
 
-	print "rom[$pc] = {2'd$m_alu_mux_input1, 2'd$m_alu_mux_input2, 3'd$m_alu_mux_operation, 3'd$m_bus_mux_input, 3'd$m_bus_mux_shift, 1'b$m_bus_shift_right, 2'd$m_bus_mux_or, 3'd$m_bus_mux_mask, 3'd$m_bus_mux_output, 2'b10}; // $line_saved\n"
+	print "rom[$pc] = {1'b$m_a31_t0, 1'b$m_set_eam, 1'b$m_reset_carry, 2'd$m_alu_mux_input1, 2'd$m_alu_mux_input2, 3'd$m_alu_mux_operation, 3'd$m_bus_mux_input, 3'd$m_bus_mux_shift, 1'b$m_bus_shift_right, 2'd$m_bus_mux_or, 3'd$m_bus_mux_mask, 3'd$m_bus_mux_output, 2'b10}; // $line_saved\n"
 }
 
 sub parse_memory {
