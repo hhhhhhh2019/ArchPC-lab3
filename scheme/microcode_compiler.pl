@@ -144,12 +144,12 @@ sub parse_move_and_alu {
 	my $m_alu_mux_input2 = 0;
 	my $m_alu_mux_operation = 0;
 
-	my $m_bus_mux_input = 0;
+	my $m_bus_mux_input;
 	my $m_bus_mux_shift = 0;
 	my $m_bus_shift_right = 0;
 	my $m_bus_mux_or = 0;
 	my $m_bus_mux_mask = 0;
-	my $m_bus_mux_output = 0;
+	my $m_bus_mux_output;
 
 	if ($line =~ /ALU\s+\<\-\s+T/)   { $m_alu_mux_input1 = 0; }
 	if ($line =~ /ALU\s+\<\-\s+A/)   { $m_alu_mux_input1 = 1; }
@@ -172,8 +172,8 @@ sub parse_move_and_alu {
     # out <- inp >> (4-offset[1:0])*8 | or
     # out <- inp << (4-offset[1:0])*8 | or & 0xffffffff >>    mask_offset[1:0] *8
     # out <- inp >>    offset[1:0] *8 | or & 0xffffffff << (4-mask_offset[1:0])*8
-
-    if ($line =~ s/^(?<result>\w+)\s+\<\-\s+(?<input>\w+)\s+//) {
+    
+    if ($line =~ s/^(?<result>\w+)\s+\<\-\s+(?<input>\w+)\s*//) {
         $m_bus_mux_output = $registers_index{$+{result}};
         $m_bus_mux_input = $registers_index{$+{input}};
 

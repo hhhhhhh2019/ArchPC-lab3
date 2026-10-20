@@ -159,11 +159,11 @@ module control_unit(input wire         clk,
    always @(posedge clk or posedge reset) begin
 	  if (reset) begin
 		 mc <= 'b0;
-		 T <= 'b0;
-		 S <= 'b0;
-		 R <= 'b0;
-		 A <= 'b0;
-		 B <= 'b0;
+		 T <= 'b1;
+		 S <= 'b10;
+		 R <= 'b11;
+		 A <= 'b100;
+		 B <= 'b101;
 		 buffer <= 'b0;
 		 pc  <= 32'h0000;
 		 dsp <= 32'h1000;
