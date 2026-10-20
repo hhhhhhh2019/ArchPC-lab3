@@ -19,7 +19,7 @@ module cpu_simulation;
       #20;
       reset = 0;
 
-      #500;
+      #5000;
 
       $display("Симуляция окончена. Открывайте файл в GTKWave!");
       $finish;

@@ -1,12 +1,12 @@
 module control_unit(input wire         clk,
-					 input wire         reset,
-					 output wire [29:0] mem_address_,
-					 input wire [31:0] mem_in,
-					 output reg [31:0] mem_out,
-					 output wire mem_read_,
-					 output wire mem_write_);
-   reg [127:0] rom[255:0];
-   reg [7:0]   mc;
+					input wire         reset,
+					output wire [29:0] mem_address_,
+					input wire [31:0]  mem_in,
+					output reg [31:0]  mem_out,
+					output wire        mem_read_,
+					output wire        mem_write_);
+   reg [1023:0] rom[255:0];
+   reg [9:0]    mc;
 
    initial begin
       rom[0] = {3'd5, 1'b0, 1'b0, 1'b0, 2'b11}; // mem_address <- pc[31:2]
@@ -35,7 +35,7 @@ module control_unit(input wire         clk,
 
    always @(*) begin
 	  case (m_goto_mux_reg)
-		default: m_goto_cond_reg = 'b0;
+		3'b000:  m_goto_cond_reg = cmd;
 		3'b001:  m_goto_cond_reg = A;
 		3'b010:  m_goto_cond_reg = buffer;
 		3'b011:  m_goto_cond_reg = T;

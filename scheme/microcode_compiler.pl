@@ -27,7 +27,7 @@ while (my $line = <>) {
 	$line =~ s/^\s+|\s+$|\s*#.*$//g;
 	next if $line =~ /^\s*$/;
 
-	if ($line =~ /^(\w+):$/) {
+	if ($line =~ /^([\w\?\d]+):$/) {
 		$labels{$1} = $pc;
 		next;
 	}
@@ -59,7 +59,7 @@ foreach my $pc (0 .. $#microcode_lines) {
 }
 
 sub parse_goto {
-	my $goto_regex = qr/goto\s+(?<target>\w+)/;
+	my $goto_regex = qr/goto\s+(?<target>[\w\?\d]+)/;
 	my $if_regex = qr/
 	   if \s+
 	   (?<register>\w+)
@@ -79,7 +79,10 @@ sub parse_goto {
 	my $m_goto_mask = 0;
 
 	if ($line =~ $goto_regex) {
-		$m_goto_addr = $labels{$+{target}};
+        if (!defined $labels{$+{target}}) {
+            die $+{target} . " not defiend";
+        }
+        $m_goto_addr = $labels{$+{target}};
 	}
 
 	if ($line =~ $if_regex) {
@@ -96,7 +99,7 @@ sub parse_goto {
 		}
 	}
 
-	print "rom[$pc] = {8'd$m_goto_addr, 2'd$m_goto_mux_reg, 32'd$m_goto_mask, 2'b00}; // $line\n";
+	print "rom[$pc] = {10'd$m_goto_addr, 2'd$m_goto_mux_reg, 32'd$m_goto_mask, 2'b00}; // $line\n";
 }
 
 sub parse_inc_dec {

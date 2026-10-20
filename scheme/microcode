@@ -5,4 +5,898 @@ ifetch:
 	pc += 1
 	if buffer[1:0] == 0; goto ifetch
 
-    
+ifetch????????:
+    if cmd[7] == 0; goto ifetch0???????
+ifetch1???????:
+    if cmd[6] == 0; goto ifetch10??????
+ifetch11??????:
+    if cmd[5] == 0; goto ifetch110?????
+ifetch111?????:
+    if cmd[4] == 0; goto ifetch1110????
+ifetch1111????:
+    if cmd[3] == 0; goto ifetch11110???
+ifetch11111???:
+    if cmd[2] == 0; goto ifetch111110??
+ifetch111111??:
+    if cmd[1] == 0; goto ifetch1111110?
+ifetch1111111?:
+    if cmd[0] == 0; goto cmd11111110
+    goto cmd11111111
+ifetch1111110?:
+    if cmd[0] == 0; goto cmd11111100
+    goto cmd11111101
+ifetch111110??:
+    if cmd[1] == 0; goto ifetch1111100?
+ifetch1111101?:
+    if cmd[0] == 0; goto cmd11111010
+    goto cmd11111011
+ifetch1111100?:
+    if cmd[0] == 0; goto cmd11111000
+    goto cmd11111001
+ifetch11110???:
+    if cmd[2] == 0; goto ifetch111100??
+ifetch111101??:
+    if cmd[1] == 0; goto ifetch1111010?
+ifetch1111011?:
+    if cmd[0] == 0; goto cmd11110110
+    goto cmd11110111
+ifetch1111010?:
+    if cmd[0] == 0; goto cmd11110100
+    goto cmd11110101
+ifetch111100??:
+    if cmd[1] == 0; goto ifetch1111000?
+ifetch1111001?:
+    if cmd[0] == 0; goto cmd11110010
+    goto cmd11110011
+ifetch1111000?:
+    if cmd[0] == 0; goto cmd11110000
+    goto cmd11110001
+ifetch1110????:
+    if cmd[3] == 0; goto ifetch11100???
+ifetch11101???:
+    if cmd[2] == 0; goto ifetch111010??
+ifetch111011??:
+    if cmd[1] == 0; goto ifetch1110110?
+ifetch1110111?:
+    if cmd[0] == 0; goto cmd11101110
+    goto cmd11101111
+ifetch1110110?:
+    if cmd[0] == 0; goto cmd11101100
+    goto cmd11101101
+ifetch111010??:
+    if cmd[1] == 0; goto ifetch1110100?
+ifetch1110101?:
+    if cmd[0] == 0; goto cmd11101010
+    goto cmd11101011
+ifetch1110100?:
+    if cmd[0] == 0; goto cmd11101000
+    goto cmd11101001
+ifetch11100???:
+    if cmd[2] == 0; goto ifetch111000??
+ifetch111001??:
+    if cmd[1] == 0; goto ifetch1110010?
+ifetch1110011?:
+    if cmd[0] == 0; goto cmd11100110
+    goto cmd11100111
+ifetch1110010?:
+    if cmd[0] == 0; goto cmd11100100
+    goto cmd11100101
+ifetch111000??:
+    if cmd[1] == 0; goto ifetch1110000?
+ifetch1110001?:
+    if cmd[0] == 0; goto cmd11100010
+    goto cmd11100011
+ifetch1110000?:
+    if cmd[0] == 0; goto cmd11100000
+    goto cmd11100001
+ifetch110?????:
+    if cmd[4] == 0; goto ifetch1100????
+ifetch1101????:
+    if cmd[3] == 0; goto ifetch11010???
+ifetch11011???:
+    if cmd[2] == 0; goto ifetch110110??
+ifetch110111??:
+    if cmd[1] == 0; goto ifetch1101110?
+ifetch1101111?:
+    if cmd[0] == 0; goto cmd11011110
+    goto cmd11011111
+ifetch1101110?:
+    if cmd[0] == 0; goto cmd11011100
+    goto cmd11011101
+ifetch110110??:
+    if cmd[1] == 0; goto ifetch1101100?
+ifetch1101101?:
+    if cmd[0] == 0; goto cmd11011010
+    goto cmd11011011
+ifetch1101100?:
+    if cmd[0] == 0; goto cmd11011000
+    goto cmd11011001
+ifetch11010???:
+    if cmd[2] == 0; goto ifetch110100??
+ifetch110101??:
+    if cmd[1] == 0; goto ifetch1101010?
+ifetch1101011?:
+    if cmd[0] == 0; goto cmd11010110
+    goto cmd11010111
+ifetch1101010?:
+    if cmd[0] == 0; goto cmd11010100
+    goto cmd11010101
+ifetch110100??:
+    if cmd[1] == 0; goto ifetch1101000?
+ifetch1101001?:
+    if cmd[0] == 0; goto cmd11010010
+    goto cmd11010011
+ifetch1101000?:
+    if cmd[0] == 0; goto cmd11010000
+    goto cmd11010001
+ifetch1100????:
+    if cmd[3] == 0; goto ifetch11000???
+ifetch11001???:
+    if cmd[2] == 0; goto ifetch110010??
+ifetch110011??:
+    if cmd[1] == 0; goto ifetch1100110?
+ifetch1100111?:
+    if cmd[0] == 0; goto cmd11001110
+    goto cmd11001111
+ifetch1100110?:
+    if cmd[0] == 0; goto cmd11001100
+    goto cmd11001101
+ifetch110010??:
+    if cmd[1] == 0; goto ifetch1100100?
+ifetch1100101?:
+    if cmd[0] == 0; goto cmd11001010
+    goto cmd11001011
+ifetch1100100?:
+    if cmd[0] == 0; goto cmd11001000
+    goto cmd11001001
+ifetch11000???:
+    if cmd[2] == 0; goto ifetch110000??
+ifetch110001??:
+    if cmd[1] == 0; goto ifetch1100010?
+ifetch1100011?:
+    if cmd[0] == 0; goto cmd11000110
+    goto cmd11000111
+ifetch1100010?:
+    if cmd[0] == 0; goto cmd11000100
+    goto cmd11000101
+ifetch110000??:
+    if cmd[1] == 0; goto ifetch1100000?
+ifetch1100001?:
+    if cmd[0] == 0; goto cmd11000010
+    goto cmd11000011
+ifetch1100000?:
+    if cmd[0] == 0; goto cmd11000000
+    goto cmd11000001
+ifetch10??????:
+    if cmd[5] == 0; goto ifetch100?????
+ifetch101?????:
+    if cmd[4] == 0; goto ifetch1010????
+ifetch1011????:
+    if cmd[3] == 0; goto ifetch10110???
+ifetch10111???:
+    if cmd[2] == 0; goto ifetch101110??
+ifetch101111??:
+    if cmd[1] == 0; goto ifetch1011110?
+ifetch1011111?:
+    if cmd[0] == 0; goto cmd10111110
+    goto cmd10111111
+ifetch1011110?:
+    if cmd[0] == 0; goto cmd10111100
+    goto cmd10111101
+ifetch101110??:
+    if cmd[1] == 0; goto ifetch1011100?
+ifetch1011101?:
+    if cmd[0] == 0; goto cmd10111010
+    goto cmd10111011
+ifetch1011100?:
+    if cmd[0] == 0; goto cmd10111000
+    goto cmd10111001
+ifetch10110???:
+    if cmd[2] == 0; goto ifetch101100??
+ifetch101101??:
+    if cmd[1] == 0; goto ifetch1011010?
+ifetch1011011?:
+    if cmd[0] == 0; goto cmd10110110
+    goto cmd10110111
+ifetch1011010?:
+    if cmd[0] == 0; goto cmd10110100
+    goto cmd10110101
+ifetch101100??:
+    if cmd[1] == 0; goto ifetch1011000?
+ifetch1011001?:
+    if cmd[0] == 0; goto cmd10110010
+    goto cmd10110011
+ifetch1011000?:
+    if cmd[0] == 0; goto cmd10110000
+    goto cmd10110001
+ifetch1010????:
+    if cmd[3] == 0; goto ifetch10100???
+ifetch10101???:
+    if cmd[2] == 0; goto ifetch101010??
+ifetch101011??:
+    if cmd[1] == 0; goto ifetch1010110?
+ifetch1010111?:
+    if cmd[0] == 0; goto cmd10101110
+    goto cmd10101111
+ifetch1010110?:
+    if cmd[0] == 0; goto cmd10101100
+    goto cmd10101101
+ifetch101010??:
+    if cmd[1] == 0; goto ifetch1010100?
+ifetch1010101?:
+    if cmd[0] == 0; goto cmd10101010
+    goto cmd10101011
+ifetch1010100?:
+    if cmd[0] == 0; goto cmd10101000
+    goto cmd10101001
+ifetch10100???:
+    if cmd[2] == 0; goto ifetch101000??
+ifetch101001??:
+    if cmd[1] == 0; goto ifetch1010010?
+ifetch1010011?:
+    if cmd[0] == 0; goto cmd10100110
+    goto cmd10100111
+ifetch1010010?:
+    if cmd[0] == 0; goto cmd10100100
+    goto cmd10100101
+ifetch101000??:
+    if cmd[1] == 0; goto ifetch1010000?
+ifetch1010001?:
+    if cmd[0] == 0; goto cmd10100010
+    goto cmd10100011
+ifetch1010000?:
+    if cmd[0] == 0; goto cmd10100000
+    goto cmd10100001
+ifetch100?????:
+    if cmd[4] == 0; goto ifetch1000????
+ifetch1001????:
+    if cmd[3] == 0; goto ifetch10010???
+ifetch10011???:
+    if cmd[2] == 0; goto ifetch100110??
+ifetch100111??:
+    if cmd[1] == 0; goto ifetch1001110?
+ifetch1001111?:
+    if cmd[0] == 0; goto cmd10011110
+    goto cmd10011111
+ifetch1001110?:
+    if cmd[0] == 0; goto cmd10011100
+    goto cmd10011101
+ifetch100110??:
+    if cmd[1] == 0; goto ifetch1001100?
+ifetch1001101?:
+    if cmd[0] == 0; goto cmd10011010
+    goto cmd10011011
+ifetch1001100?:
+    if cmd[0] == 0; goto cmd10011000
+    goto cmd10011001
+ifetch10010???:
+    if cmd[2] == 0; goto ifetch100100??
+ifetch100101??:
+    if cmd[1] == 0; goto ifetch1001010?
+ifetch1001011?:
+    if cmd[0] == 0; goto cmd10010110
+    goto cmd10010111
+ifetch1001010?:
+    if cmd[0] == 0; goto cmd10010100
+    goto cmd10010101
+ifetch100100??:
+    if cmd[1] == 0; goto ifetch1001000?
+ifetch1001001?:
+    if cmd[0] == 0; goto cmd10010010
+    goto cmd10010011
+ifetch1001000?:
+    if cmd[0] == 0; goto cmd10010000
+    goto cmd10010001
+ifetch1000????:
+    if cmd[3] == 0; goto ifetch10000???
+ifetch10001???:
+    if cmd[2] == 0; goto ifetch100010??
+ifetch100011??:
+    if cmd[1] == 0; goto ifetch1000110?
+ifetch1000111?:
+    if cmd[0] == 0; goto cmd10001110
+    goto cmd10001111
+ifetch1000110?:
+    if cmd[0] == 0; goto cmd10001100
+    goto cmd10001101
+ifetch100010??:
+    if cmd[1] == 0; goto ifetch1000100?
+ifetch1000101?:
+    if cmd[0] == 0; goto cmd10001010
+    goto cmd10001011
+ifetch1000100?:
+    if cmd[0] == 0; goto cmd10001000
+    goto cmd10001001
+ifetch10000???:
+    if cmd[2] == 0; goto ifetch100000??
+ifetch100001??:
+    if cmd[1] == 0; goto ifetch1000010?
+ifetch1000011?:
+    if cmd[0] == 0; goto cmd10000110
+    goto cmd10000111
+ifetch1000010?:
+    if cmd[0] == 0; goto cmd10000100
+    goto cmd10000101
+ifetch100000??:
+    if cmd[1] == 0; goto ifetch1000000?
+ifetch1000001?:
+    if cmd[0] == 0; goto cmd10000010
+    goto cmd10000011
+ifetch1000000?:
+    if cmd[0] == 0; goto cmd10000000
+    goto cmd10000001
+ifetch0???????:
+    if cmd[6] == 0; goto ifetch00??????
+ifetch01??????:
+    if cmd[5] == 0; goto ifetch010?????
+ifetch011?????:
+    if cmd[4] == 0; goto ifetch0110????
+ifetch0111????:
+    if cmd[3] == 0; goto ifetch01110???
+ifetch01111???:
+    if cmd[2] == 0; goto ifetch011110??
+ifetch011111??:
+    if cmd[1] == 0; goto ifetch0111110?
+ifetch0111111?:
+    if cmd[0] == 0; goto cmd01111110
+    goto cmd01111111
+ifetch0111110?:
+    if cmd[0] == 0; goto cmd01111100
+    goto cmd01111101
+ifetch011110??:
+    if cmd[1] == 0; goto ifetch0111100?
+ifetch0111101?:
+    if cmd[0] == 0; goto cmd01111010
+    goto cmd01111011
+ifetch0111100?:
+    if cmd[0] == 0; goto cmd01111000
+    goto cmd01111001
+ifetch01110???:
+    if cmd[2] == 0; goto ifetch011100??
+ifetch011101??:
+    if cmd[1] == 0; goto ifetch0111010?
+ifetch0111011?:
+    if cmd[0] == 0; goto cmd01110110
+    goto cmd01110111
+ifetch0111010?:
+    if cmd[0] == 0; goto cmd01110100
+    goto cmd01110101
+ifetch011100??:
+    if cmd[1] == 0; goto ifetch0111000?
+ifetch0111001?:
+    if cmd[0] == 0; goto cmd01110010
+    goto cmd01110011
+ifetch0111000?:
+    if cmd[0] == 0; goto cmd01110000
+    goto cmd01110001
+ifetch0110????:
+    if cmd[3] == 0; goto ifetch01100???
+ifetch01101???:
+    if cmd[2] == 0; goto ifetch011010??
+ifetch011011??:
+    if cmd[1] == 0; goto ifetch0110110?
+ifetch0110111?:
+    if cmd[0] == 0; goto cmd01101110
+    goto cmd01101111
+ifetch0110110?:
+    if cmd[0] == 0; goto cmd01101100
+    goto cmd01101101
+ifetch011010??:
+    if cmd[1] == 0; goto ifetch0110100?
+ifetch0110101?:
+    if cmd[0] == 0; goto cmd01101010
+    goto cmd01101011
+ifetch0110100?:
+    if cmd[0] == 0; goto cmd01101000
+    goto cmd01101001
+ifetch01100???:
+    if cmd[2] == 0; goto ifetch011000??
+ifetch011001??:
+    if cmd[1] == 0; goto ifetch0110010?
+ifetch0110011?:
+    if cmd[0] == 0; goto cmd01100110
+    goto cmd01100111
+ifetch0110010?:
+    if cmd[0] == 0; goto cmd01100100
+    goto cmd01100101
+ifetch011000??:
+    if cmd[1] == 0; goto ifetch0110000?
+ifetch0110001?:
+    if cmd[0] == 0; goto cmd01100010
+    goto cmd01100011
+ifetch0110000?:
+    if cmd[0] == 0; goto cmd01100000
+    goto cmd01100001
+ifetch010?????:
+    if cmd[4] == 0; goto ifetch0100????
+ifetch0101????:
+    if cmd[3] == 0; goto ifetch01010???
+ifetch01011???:
+    if cmd[2] == 0; goto ifetch010110??
+ifetch010111??:
+    if cmd[1] == 0; goto ifetch0101110?
+ifetch0101111?:
+    if cmd[0] == 0; goto cmd01011110
+    goto cmd01011111
+ifetch0101110?:
+    if cmd[0] == 0; goto cmd01011100
+    goto cmd01011101
+ifetch010110??:
+    if cmd[1] == 0; goto ifetch0101100?
+ifetch0101101?:
+    if cmd[0] == 0; goto cmd01011010
+    goto cmd01011011
+ifetch0101100?:
+    if cmd[0] == 0; goto cmd01011000
+    goto cmd01011001
+ifetch01010???:
+    if cmd[2] == 0; goto ifetch010100??
+ifetch010101??:
+    if cmd[1] == 0; goto ifetch0101010?
+ifetch0101011?:
+    if cmd[0] == 0; goto cmd01010110
+    goto cmd01010111
+ifetch0101010?:
+    if cmd[0] == 0; goto cmd01010100
+    goto cmd01010101
+ifetch010100??:
+    if cmd[1] == 0; goto ifetch0101000?
+ifetch0101001?:
+    if cmd[0] == 0; goto cmd01010010
+    goto cmd01010011
+ifetch0101000?:
+    if cmd[0] == 0; goto cmd01010000
+    goto cmd01010001
+ifetch0100????:
+    if cmd[3] == 0; goto ifetch01000???
+ifetch01001???:
+    if cmd[2] == 0; goto ifetch010010??
+ifetch010011??:
+    if cmd[1] == 0; goto ifetch0100110?
+ifetch0100111?:
+    if cmd[0] == 0; goto cmd01001110
+    goto cmd01001111
+ifetch0100110?:
+    if cmd[0] == 0; goto cmd01001100
+    goto cmd01001101
+ifetch010010??:
+    if cmd[1] == 0; goto ifetch0100100?
+ifetch0100101?:
+    if cmd[0] == 0; goto cmd01001010
+    goto cmd01001011
+ifetch0100100?:
+    if cmd[0] == 0; goto cmd01001000
+    goto cmd01001001
+ifetch01000???:
+    if cmd[2] == 0; goto ifetch010000??
+ifetch010001??:
+    if cmd[1] == 0; goto ifetch0100010?
+ifetch0100011?:
+    if cmd[0] == 0; goto cmd01000110
+    goto cmd01000111
+ifetch0100010?:
+    if cmd[0] == 0; goto cmd01000100
+    goto cmd01000101
+ifetch010000??:
+    if cmd[1] == 0; goto ifetch0100000?
+ifetch0100001?:
+    if cmd[0] == 0; goto cmd01000010
+    goto cmd01000011
+ifetch0100000?:
+    if cmd[0] == 0; goto cmd01000000
+    goto cmd01000001
+ifetch00??????:
+    if cmd[5] == 0; goto ifetch000?????
+ifetch001?????:
+    if cmd[4] == 0; goto ifetch0010????
+ifetch0011????:
+    if cmd[3] == 0; goto ifetch00110???
+ifetch00111???:
+    if cmd[2] == 0; goto ifetch001110??
+ifetch001111??:
+    if cmd[1] == 0; goto ifetch0011110?
+ifetch0011111?:
+    if cmd[0] == 0; goto cmd00111110
+    goto cmd00111111
+ifetch0011110?:
+    if cmd[0] == 0; goto cmd00111100
+    goto cmd00111101
+ifetch001110??:
+    if cmd[1] == 0; goto ifetch0011100?
+ifetch0011101?:
+    if cmd[0] == 0; goto cmd00111010
+    goto cmd00111011
+ifetch0011100?:
+    if cmd[0] == 0; goto cmd00111000
+    goto cmd00111001
+ifetch00110???:
+    if cmd[2] == 0; goto ifetch001100??
+ifetch001101??:
+    if cmd[1] == 0; goto ifetch0011010?
+ifetch0011011?:
+    if cmd[0] == 0; goto cmd00110110
+    goto cmd00110111
+ifetch0011010?:
+    if cmd[0] == 0; goto cmd00110100
+    goto cmd00110101
+ifetch001100??:
+    if cmd[1] == 0; goto ifetch0011000?
+ifetch0011001?:
+    if cmd[0] == 0; goto cmd00110010
+    goto cmd00110011
+ifetch0011000?:
+    if cmd[0] == 0; goto cmd00110000
+    goto cmd00110001
+ifetch0010????:
+    if cmd[3] == 0; goto ifetch00100???
+ifetch00101???:
+    if cmd[2] == 0; goto ifetch001010??
+ifetch001011??:
+    if cmd[1] == 0; goto ifetch0010110?
+ifetch0010111?:
+    if cmd[0] == 0; goto cmd00101110
+    goto cmd00101111
+ifetch0010110?:
+    if cmd[0] == 0; goto cmd00101100
+    goto cmd00101101
+ifetch001010??:
+    if cmd[1] == 0; goto ifetch0010100?
+ifetch0010101?:
+    if cmd[0] == 0; goto cmd00101010
+    goto cmd00101011
+ifetch0010100?:
+    if cmd[0] == 0; goto cmd00101000
+    goto cmd00101001
+ifetch00100???:
+    if cmd[2] == 0; goto ifetch001000??
+ifetch001001??:
+    if cmd[1] == 0; goto ifetch0010010?
+ifetch0010011?:
+    if cmd[0] == 0; goto cmd00100110
+    goto cmd00100111
+ifetch0010010?:
+    if cmd[0] == 0; goto cmd00100100
+    goto cmd00100101
+ifetch001000??:
+    if cmd[1] == 0; goto ifetch0010000?
+ifetch0010001?:
+    if cmd[0] == 0; goto cmd00100010
+    goto cmd00100011
+ifetch0010000?:
+    if cmd[0] == 0; goto cmd00100000
+    goto cmd00100001
+ifetch000?????:
+    if cmd[4] == 0; goto ifetch0000????
+ifetch0001????:
+    if cmd[3] == 0; goto ifetch00010???
+ifetch00011???:
+    if cmd[2] == 0; goto ifetch000110??
+ifetch000111??:
+    if cmd[1] == 0; goto ifetch0001110?
+ifetch0001111?:
+    if cmd[0] == 0; goto cmd00011110
+    goto cmd00011111
+ifetch0001110?:
+    if cmd[0] == 0; goto cmd00011100
+    goto cmd00011101
+ifetch000110??:
+    if cmd[1] == 0; goto ifetch0001100?
+ifetch0001101?:
+    if cmd[0] == 0; goto cmd00011010
+    goto cmd00011011
+ifetch0001100?:
+    if cmd[0] == 0; goto cmd00011000
+    goto cmd00011001
+ifetch00010???:
+    if cmd[2] == 0; goto ifetch000100??
+ifetch000101??:
+    if cmd[1] == 0; goto ifetch0001010?
+ifetch0001011?:
+    if cmd[0] == 0; goto cmd00010110
+    goto cmd00010111
+ifetch0001010?:
+    if cmd[0] == 0; goto cmd00010100
+    goto cmd00010101
+ifetch000100??:
+    if cmd[1] == 0; goto ifetch0001000?
+ifetch0001001?:
+    if cmd[0] == 0; goto cmd00010010
+    goto cmd00010011
+ifetch0001000?:
+    if cmd[0] == 0; goto cmd00010000
+    goto cmd00010001
+ifetch0000????:
+    if cmd[3] == 0; goto ifetch00000???
+ifetch00001???:
+    if cmd[2] == 0; goto ifetch000010??
+ifetch000011??:
+    if cmd[1] == 0; goto ifetch0000110?
+ifetch0000111?:
+    if cmd[0] == 0; goto cmd00001110
+    goto cmd00001111
+ifetch0000110?:
+    if cmd[0] == 0; goto cmd00001100
+    goto cmd00001101
+ifetch000010??:
+    if cmd[1] == 0; goto ifetch0000100?
+ifetch0000101?:
+    if cmd[0] == 0; goto cmd00001010
+    goto cmd00001011
+ifetch0000100?:
+    if cmd[0] == 0; goto cmd00001000
+    goto cmd00001001
+ifetch00000???:
+    if cmd[2] == 0; goto ifetch000000??
+ifetch000001??:
+    if cmd[1] == 0; goto ifetch0000010?
+ifetch0000011?:
+    if cmd[0] == 0; goto cmd00000110
+    goto cmd00000111
+ifetch0000010?:
+    if cmd[0] == 0; goto cmd00000100
+    goto cmd00000101
+ifetch000000??:
+    if cmd[1] == 0; goto ifetch0000000?
+ifetch0000001?:
+    if cmd[0] == 0; goto cmd00000010
+    goto cmd00000011
+ifetch0000000?:
+    if cmd[0] == 0; goto cmd00000000
+    goto cmd00000001
+
+cmd00000000:
+cmd00000001:
+cmd00000010:
+cmd00000011:
+cmd00000100:
+cmd00000101:
+cmd00000110:
+cmd00000111:
+cmd00001000:
+cmd00001001:
+cmd00001010:
+cmd00001011:
+cmd00001100:
+cmd00001101:
+cmd00001110:
+cmd00001111:
+cmd00010000:
+cmd00010001:
+cmd00010010:
+cmd00010011:
+cmd00010100:
+cmd00010101:
+cmd00010110:
+cmd00010111:
+cmd00011000:
+cmd00011001:
+cmd00011010:
+cmd00011011:
+cmd00011100:
+cmd00011101:
+cmd00011110:
+cmd00011111:
+cmd00100000:
+cmd00100001:
+cmd00100010:
+cmd00100011:
+cmd00100100:
+cmd00100101:
+cmd00100110:
+cmd00100111:
+cmd00101000:
+cmd00101001:
+cmd00101010:
+cmd00101011:
+cmd00101100:
+cmd00101101:
+cmd00101110:
+cmd00101111:
+cmd00110000:
+cmd00110001:
+cmd00110010:
+cmd00110011:
+cmd00110100:
+cmd00110101:
+cmd00110110:
+cmd00110111:
+cmd00111000:
+cmd00111001:
+cmd00111010:
+cmd00111011:
+cmd00111100:
+cmd00111101:
+cmd00111110:
+cmd00111111:
+cmd01000000:
+cmd01000001:
+cmd01000010:
+cmd01000011:
+cmd01000100:
+cmd01000101:
+cmd01000110:
+cmd01000111:
+cmd01001000:
+cmd01001001:
+cmd01001010:
+cmd01001011:
+cmd01001100:
+cmd01001101:
+cmd01001110:
+cmd01001111:
+cmd01010000:
+cmd01010001:
+cmd01010010:
+cmd01010011:
+cmd01010100:
+cmd01010101:
+cmd01010110:
+cmd01010111:
+cmd01011000:
+cmd01011001:
+cmd01011010:
+cmd01011011:
+cmd01011100:
+cmd01011101:
+cmd01011110:
+cmd01011111:
+cmd01100000:
+cmd01100001:
+cmd01100010:
+cmd01100011:
+cmd01100100:
+cmd01100101:
+cmd01100110:
+cmd01100111:
+cmd01101000:
+cmd01101001:
+cmd01101010:
+cmd01101011:
+cmd01101100:
+cmd01101101:
+cmd01101110:
+cmd01101111:
+cmd01110000:
+cmd01110001:
+cmd01110010:
+cmd01110011:
+cmd01110100:
+cmd01110101:
+cmd01110110:
+cmd01110111:
+cmd01111000:
+cmd01111001:
+cmd01111010:
+cmd01111011:
+cmd01111100:
+cmd01111101:
+cmd01111110:
+cmd01111111:
+cmd10000000:
+cmd10000001:
+cmd10000010:
+cmd10000011:
+cmd10000100:
+cmd10000101:
+cmd10000110:
+cmd10000111:
+cmd10001000:
+cmd10001001:
+cmd10001010:
+cmd10001011:
+cmd10001100:
+cmd10001101:
+cmd10001110:
+cmd10001111:
+cmd10010000:
+cmd10010001:
+cmd10010010:
+cmd10010011:
+cmd10010100:
+cmd10010101:
+cmd10010110:
+cmd10010111:
+cmd10011000:
+cmd10011001:
+cmd10011010:
+cmd10011011:
+cmd10011100:
+cmd10011101:
+cmd10011110:
+cmd10011111:
+cmd10100000:
+cmd10100001:
+cmd10100010:
+cmd10100011:
+cmd10100100:
+cmd10100101:
+cmd10100110:
+cmd10100111:
+cmd10101000:
+cmd10101001:
+cmd10101010:
+cmd10101011:
+cmd10101100:
+cmd10101101:
+cmd10101110:
+cmd10101111:
+cmd10110000:
+cmd10110001:
+cmd10110010:
+cmd10110011:
+cmd10110100:
+cmd10110101:
+cmd10110110:
+cmd10110111:
+cmd10111000:
+cmd10111001:
+cmd10111010:
+cmd10111011:
+cmd10111100:
+cmd10111101:
+cmd10111110:
+cmd10111111:
+cmd11000000:
+cmd11000001:
+cmd11000010:
+cmd11000011:
+cmd11000100:
+cmd11000101:
+cmd11000110:
+cmd11000111:
+cmd11001000:
+cmd11001001:
+cmd11001010:
+cmd11001011:
+cmd11001100:
+cmd11001101:
+cmd11001110:
+cmd11001111:
+cmd11010000:
+cmd11010001:
+cmd11010010:
+cmd11010011:
+cmd11010100:
+cmd11010101:
+cmd11010110:
+cmd11010111:
+cmd11011000:
+cmd11011001:
+cmd11011010:
+cmd11011011:
+cmd11011100:
+cmd11011101:
+cmd11011110:
+cmd11011111:
+cmd11100000:
+cmd11100001:
+cmd11100010:
+cmd11100011:
+cmd11100100:
+cmd11100101:
+cmd11100110:
+cmd11100111:
+cmd11101000:
+cmd11101001:
+cmd11101010:
+cmd11101011:
+cmd11101100:
+cmd11101101:
+cmd11101110:
+cmd11101111:
+cmd11110000:
+cmd11110001:
+cmd11110010:
+cmd11110011:
+cmd11110100:
+cmd11110101:
+cmd11110110:
+cmd11110111:
+cmd11111000:
+cmd11111001:
+cmd11111010:
+cmd11111011:
+cmd11111100:
+cmd11111101:
+cmd11111110:
+cmd11111111:
