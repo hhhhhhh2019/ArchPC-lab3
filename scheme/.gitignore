@@ -1,1 +1,6 @@
 /.direnv
+/f32a_sim.vvp
+/microcode.vh
+/output.json
+/schema.svg
+/simulation.vcd
