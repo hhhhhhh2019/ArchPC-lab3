@@ -9,7 +9,8 @@ biigendian
 	 4) ALU и перенос данных
 
 ifetch
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	cmd <- mem_in << pc[1:0]*8
 	pc += 1
 
@@ -18,13 +19,16 @@ TODO: select instruction
 <value>  dataStack.push(<value>)
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	T <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto ifetch
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	T <- mem_in >> (4-pc[1:0])*8 | T
 	goto ifetch
 
@@ -32,19 +36,24 @@ TODO: select instruction
 @p  dataStack.push(mem[<address>])
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto @p_fetch
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
 @p_fetch
-	mem_address <- buffer[31:2]; mem_read
+	mem_address <- buffer[31:2]
+	mem_read
 	T <- mem_in << buffer[1:0]*8
 	if buffer[1:0] == 0; goto ifetch
-	mem_address <- buffer[31:2]+4; mem_read
+	mem_address <- buffer[31:2]+4
+	mem_read
 	T <- mem_in >> (4-buffer[1:0])*8 | T
 	goto ifetch
 
@@ -52,12 +61,15 @@ TODO: select instruction
 @  dataStack.push(mem[A])
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
-	mem_address <- A[31:2]; mem_read
+	mem_address <- A[31:2]
+	mem_read
 	T <- mem_in << A[1:0]*8
 	if A[1:0] == 0; goto ifetch
-	mem_address <- A[31:2]+4; mem_read
+	mem_address <- A[31:2]+4
+	mem_read
 	T <- mem_in >> (4-A[1:0])*8 | T
 	goto ifetch
 
@@ -65,50 +77,63 @@ TODO: select instruction
 @+  dataStack.push(mem[A]); A <- A + 1
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
-	mem_address <- A[31:2]; mem_read
+	mem_address <- A[31:2]
+	mem_read
 	T <- mem_in << A[1:0]*8
 	if A[1:0] == 0; goto ifetch
-	mem_address <- A[31:2]+4; mem_read
+	mem_address <- A[31:2]+4
+	mem_read
 	T <- mem_in >> (4-A[1:0])*8 | T
 	ALU <- A; ALU <- 1; +; A <- ALU
 	goto ifetch
 
 
 @b  dataStack.push(mem[B])
-	mem_address <- B[31:2]; mem_read
+	mem_address <- B[31:2]
+	mem_read
 	buffer <- mem_in
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
 	T <- buffer
 	goto ifetch
 
 
 !p <address>  mem[<address>] <- dataStack.pop()
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto !p_pop
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
 !p_pop
 	if buffer[1:0] == 0; goto !p_aligned
-	mem_address <- buffer[31:2]; mem_read
+	mem_address <- buffer[31:2]
+	mem_read
 	mem_out <- T >> buffer[1:0]*8 | mem_in & 0xffffffff << (4-buffer[1:0])*8
-	mem_address <- buffser[31:2]; mem_write
-	mem_address <- buffer[31:2] + 4; mem_read
+	mem_address <- buffser[31:2]
+	mem_write
+	mem_address <- buffer[31:2] + 4
+	mem_read
 	mem_out <- T << (4-buffer[1:0])*8 | mem_in & 0xffffffff >> buffer[1:0]*8
-	mem_address <- buffer[31:2] + 4; mem_write
+	mem_address <- buffer[31:2] + 4
+	mem_write
 	goto !p_continue
 !p_aligned
 	mem_out <- T
-	mem_address <- buffer[31:2]; mem_write
+	mem_address <- buffer[31:2]
+	mem_write
 !p_continue
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -116,19 +141,25 @@ TODO: select instruction
 
 !  mem[A] <- dataStack.pop()
 	if buffer[1:0] == 0; goto !_aligned
-	mem_address <- A[31:2]; mem_read
+	mem_address <- A[31:2]
+	mem_read
 	mem_out <- T >> buffer[1:0]*8 | mem_in & 0xffffffff << (4-A[1:0])*8
-	mem_address <- A[31:2]; mem_write
-	mem_address <- A[31:2] + 4; mem_read
+	mem_address <- A[31:2]
+	mem_write
+	mem_address <- A[31:2] + 4
+	mem_read
 	mem_out <- T << (4-buffer[1:0])*8 | mem_in & 0xffffffff >> A[1:0]*8
-	mem_address <- A[31:2] + 4; mem_write
+	mem_address <- A[31:2] + 4
+	mem_write
 	goto !_continue
 !_aligned
 	mem_out <- T
-	mem_address <- A[31:2]; mem_write
+	mem_address <- A[31:2]
+	mem_write
 !_continue
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dps += 4
 	goto ifetch
@@ -136,19 +167,25 @@ TODO: select instruction
 
 !+  mem[A] <- dataStack.pop(); A <- A + 1
 	if buffer[1:0] == 0; goto !_aligned
-	mem_address <- A[31:2]; mem_read
+	mem_address <- A[31:2]
+	mem_read
 	mem_out <- T >> buffer[1:0]*8 | mem_in & 0xffffffff << (4-A[1:0])*8
-	mem_address <- A[31:2]; mem_write
-	mem_address <- A[31:2] + 4; mem_read
+	mem_address <- A[31:2]
+	mem_write
+	mem_address <- A[31:2] + 4
+	mem_read
 	mem_out <- T << (4-buffer[1:0])*8 | mem_in & 0xffffffff >> A[1:0]*8
-	mem_address <- A[31:2] + 4; mem_write
+	mem_address <- A[31:2] + 4
+	mem_write
 	goto !_continue
 !_aligned
 	mem_out <- T
-	mem_address <- A[31:2]; mem_write
+	mem_address <- A[31:2]
+	mem_write
 !_continue
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dps += 4
   ALU <- A; ALU <- 1; +; A <- ALU
@@ -157,19 +194,25 @@ TODO: select instruction
 
 !b  mem[B] <- dataStack.pop()
 	if buffer[1:0] == 0; goto !_aligned
-	mem_address <- B[31:2]; mem_read
+	mem_address <- B[31:2]
+	mem_read
 	mem_out <- T >> buffer[1:0]*8 | mem_in & 0xffffffff << (4-B[1:0])*8
-	mem_address <- B[31:2]; mem_write
-	mem_address <- B[31:2] + 4; mem_read
+	mem_address <- B[31:2]
+	mem_write
+	mem_address <- B[31:2] + 4
+	mem_read
 	mem_out <- T << (4-buffer[1:0])*8 | mem_in & 0xffffffff >> B[1:0]*8
-	mem_address <- B[31:2] + 4; mem_write
+	mem_address <- B[31:2] + 4
+	mem_write
 	goto !_continue
 !_aligned
 	mem_out <- T
-	mem_address <- B[31:2]; mem_write
+	mem_address <- B[31:2]
+	mem_write
 !_continue
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dps += 4
 	goto ifetch
@@ -178,7 +221,8 @@ TODO: select instruction
 a!  A <- dataStack.pop()
 	A <- T
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -187,7 +231,8 @@ a!  A <- dataStack.pop()
 b!  B <- dataStack.pop()
 	B <- T
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -196,7 +241,8 @@ b!  B <- dataStack.pop()
 a  dataStack.push(A)
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
 	T <- A
 	goto ifetch
@@ -233,7 +279,8 @@ inv  dataStack.push(~dataStack.pop())
 eam  eam <- dataStack.pop()
 	eam <- T[0]
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -241,7 +288,8 @@ eam  eam <- dataStack.pop()
 
 and  dataStack.push(dataStack.pop() & dataStack.pop())
 	ALU <- T; ALU <- S; &; T <- ALU
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -249,7 +297,8 @@ and  dataStack.push(dataStack.pop() & dataStack.pop())
 
 xor  dataStack.push(dataStack.pop() ^ dataStack.pop())
 	ALU <- T; ALU <- S; ^; T <- ALU
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -257,7 +306,8 @@ xor  dataStack.push(dataStack.pop() ^ dataStack.pop())
 
 drop  dataStack.pop()
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch
@@ -266,7 +316,8 @@ drop  dataStack.pop()
 dup  dataStack.push(dataStack.top()), carry flag does not change
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
 	goto ifetch
 
@@ -274,7 +325,8 @@ dup  dataStack.push(dataStack.top()), carry flag does not change
 over  T <- dataStack.pop(); S <- dataStack.pop(); dataStack.push(S); dataStack.push(T); dataStack.push(S)
 	dsp -= 4
 	mem_out <- S
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	buffer <- T
 	T <- S
 	S <- buffer
@@ -282,33 +334,39 @@ over  T <- dataStack.pop(); S <- dataStack.pop(); dataStack.push(S); dataStack.p
 
 
 ;  p <- returnStack.pop()
-	mem_address <- rsp[31:2]; mem_read
+	mem_address <- rsp[31:2]
+	mem_read
 	pc <- mem_in
 	rsp += 4
 	goto ifetch
 
 
 <label>  returnStack.push(p); p <- <label>
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto <label>_push
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
 <label>_push
 	rsp -= 4
 	mem_out <- pc
-	mem_address <- rsp[31:2]; mem_write
+	mem_address <- rsp[31:2]
+	mem_write
 	pc <- buffer
 	goto ifetch
 
 
 <label> ;  p <- <label>
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto <label> ;_jump
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
 <label> ;_jump
 	pc <- buffer
@@ -316,11 +374,13 @@ over  T <- dataStack.pop(); S <- dataStack.pop(); dataStack.push(S); dataStack.p
 
 
 next <label>  if R != 0 then; R <- R - 1; p <- <label>; else returnStack.pop()
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto next_cond
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
 next_cond
 	if R == 0; goto next_return
@@ -333,35 +393,47 @@ next_return
 
 
 if <label>  if dataStack.pop() == 0 then p <- <label>
-	mem_address <- dsp[31:2]; mem_read
-	buffer <- mem_in
+    buffer <- T
+    T <- S
+	mem_address <- dsp[31:2]
+	mem_read
+	S <- mem_in
 	if buffer == 0; goto if_success
 	pc += 4
 	goto ifetch
 if_success
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
 	if pc[1:0] == 0; goto if_cond
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
+if_cond
 	pc <- buffer
 	goto ifetch
 
 
 -if <label>  if dataStack.pop() == 0 then p <- <label>
-	mem_address <- dsp[31:2]; mem_read
-	buffer <- mem_in
+    buffer <- T
+    T <- S
+	mem_address <- dsp[31:2]
+	mem_read
+	S <- mem_in
 	if buffer[31] == 0; goto -if_success
 	pc += 4
 	goto ifetch
 -if_success
-	mem_address <- pc[31:2]; mem_read
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in << pc[1:0]*8
 	pc += 4
-	if pc[1:0] == 0; goto if_cond
-	mem_address <- pc[31:2]; mem_read
+	if pc[1:0] == 0; goto -if_cond
+	mem_address <- pc[31:2]
+	mem_read
 	buffer <- mem_in >> (4-pc[1:0])*8 | buffer
+-if_cond
 	pc <- buffer
 	goto ifetch
 
@@ -373,10 +445,12 @@ halt
 >r  dataStack.push(returnStack.pop())
 	mem_out <- S
 	dsp -= 4
-	mem_address <- dsp[31:2]; mem_write
+	mem_address <- dsp[31:2]
+	mem_write
 	S <- T
 	T <- R
-	mem_address <- rsp[31:2]; mem_read
+	mem_address <- rsp[31:2]
+	mem_read
 	R <- mem_in
 	rsp += 4
 	goto ifetch
@@ -385,10 +459,12 @@ halt
 r>  returnStack.push(dataStack.pop())
 	mem_put <- R
 	rsp -= 4
-	mem_address <- rsp[31:2]; mem_write
+	mem_address <- rsp[31:2]
+	mem_write
 	R <- T
 	T <- S
-	mem_address <- dsp[31:2]; mem_read
+	mem_address <- dsp[31:2]
+	mem_read
 	S <- mem_in
 	dsp += 4
 	goto ifetch

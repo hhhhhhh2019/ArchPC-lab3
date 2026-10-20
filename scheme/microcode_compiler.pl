@@ -27,7 +27,7 @@ while (my $line = <>) {
 	$line =~ s/^\s+|\s+$|\s*#.*$//g;
 	next if $line =~ /^\s*$/;
 
-	if ($line =~ /^([\w\?\d]+):$/) {
+	if ($line =~ /^(\S+):$/) {
 		$labels{$1} = $pc;
 		next;
 	}
@@ -59,7 +59,7 @@ foreach my $pc (0 .. $#microcode_lines) {
 }
 
 sub parse_goto {
-	my $goto_regex = qr/goto\s+(?<target>[\w\?\d]+)/;
+	my $goto_regex = qr/goto\s+(?<target>\S+)/;
 	my $if_regex = qr/
 	   if \s+
 	   (?<register>\w+)
@@ -74,7 +74,7 @@ sub parse_goto {
 
 	my ($line, $pc) = @_;
 
-	my $m_goto_addr = 0;
+	my $m_goto_addr;
 	my $m_goto_mux_reg = 0;
 	my $m_goto_mask = 0;
 
