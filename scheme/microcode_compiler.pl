@@ -99,7 +99,7 @@ sub parse_goto {
 		}
 	}
 
-	print "rom[$pc] = {10'd$m_goto_addr, 2'd$m_goto_mux_reg, 32'd$m_goto_mask, 2'b00}; // $line\n";
+	print "rom[$pc] = {10'd$m_goto_addr, 3'd$m_goto_mux_reg, 32'd$m_goto_mask, 2'b00}; // $line\n";
 }
 
 sub parse_inc_dec {

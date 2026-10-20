@@ -5,15 +5,11 @@ module control_unit(input wire         clk,
 					output reg [31:0]  mem_out,
 					output wire        mem_read_,
 					output wire        mem_write_);
-   reg [1023:0] rom[255:0];
+   reg [46:0] rom[1023:0];
    reg [9:0]    mc;
 
    initial begin
-      rom[0] = {3'd5, 1'b0, 1'b0, 1'b0, 2'b11}; // mem_address <- pc[31:2]
-      rom[1] = {3'd7, 1'b1, 1'b0, 1'b0, 2'b11}; // mem_read
-      rom[2] = {2'd0, 2'd0, 3'd4, 3'd1, 3'd5, 1'b0, 2'd0, 3'd0, 3'd0, 2'b10}; // cmd <- mem_in << pc[1:0]*8
-      rom[3] = {2'd1, 2'd0, 2'd0, 2'b01}; // pc += 1
-      rom[4] = {8'd0, 2'd2, 32'd3, 2'b00}; // if buffer[1:0] == 0; goto ifetch
+      `include "microcode.vh"
    end
 
    reg [31:0]  T, S, R, A, B, buffer;
@@ -25,10 +21,10 @@ module control_unit(input wire         clk,
 
    wire [1:0]  m_type = rom[mc][1:0];
 
-   wire [7:0]  m_goto_addr;
+   wire [9:0]  m_goto_addr;
    wire [2:0]  m_goto_mux_reg;
    wire [31:0] m_goto_mask;
-   assign {m_goto_addr, m_goto_mux_reg, m_goto_mask} = rom[mc][44:2];
+   assign {m_goto_addr, m_goto_mux_reg, m_goto_mask} = rom[mc][46:2];
 
    reg [31:0] m_goto_cond_reg;
    wire       m_goto_cond = (m_goto_cond_reg & m_goto_mask) == 0;
