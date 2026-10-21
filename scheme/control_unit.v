@@ -79,12 +79,14 @@ module control_unit(input wire         clk,
         2'b00: ALU_input1 = T;
         2'b01: ALU_input1 = A;
         2'b10: ALU_input1 = R;
+        default: ALU_input1 = 'b0;
       endcase
 
       case (m_alu_mux_input2)
         2'b00: ALU_input2 = S;
         2'b01: ALU_input2 = 1;
         2'b10: ALU_input2 = -1;
+        default: ALU_input2 = 'b0;
       endcase
 
       case (m_alu_mux_operation)
@@ -94,6 +96,7 @@ module control_unit(input wire         clk,
         3'b011: ALU = ~ALU_input1;
         3'b100: ALU = ALU_input1 << 1;
         3'b101: ALU = ALU_input1 >> 1;
+        default: ALU = 'b0;
       endcase
 
 	  case (m_bus_mux_input)
